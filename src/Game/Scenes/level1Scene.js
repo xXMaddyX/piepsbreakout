@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Map1 from "../worlds/map1/map1.js";
 import Player from "../GameObjects/Player/Player.js";
+import NormalBallObj from "../GameObjects/Ball/NormalBall/NormalBall.js";
 
 export default class Level1Scene extends Phaser.Scene {
     constructor() {
@@ -10,20 +11,47 @@ export default class Level1Scene extends Phaser.Scene {
     preload() {
         Map1.loadSprites(this);
         Player.loadSprites(this);
+        NormalBallObj.loadSprites(this);
     };
 
     create() {
-        const map1 = new Map1(this);
-        map1.create();
+        this.map1 = new Map1(this);
+        this.map1.create();
 
+        //ADD PLAYER----------------------------->
         this.player = new Player(this);
-        this.player.create(map1.xCenter, map1.yCenter + 500);
-
-        this.physics.add.collider(this.player.playerPaddle, map1.leftBoder);
-        this.physics.add.collider(this.player.playerPaddle, map1.rightBorder);
+        this.player.create(this.map1.xCenter, this.map1.yCenter + 500);
+        this.addPlayerWorldCollider();
+        
+        //ADD START BALL------------------------->
+        this.normalBall = new NormalBallObj(this);
+        this.normalBall.create();
+        this.addNormalBallCollider();
     };
+
+    addPlayerWorldCollider() {
+        this.physics.add.collider(this.player.playerPaddle, this.map1.leftBoder);
+        this.physics.add.collider(this.player.playerPaddle, this.map1.rightBorder);
+    };
+
+    addNormalBallCollider() {
+        this.physics.add.overlap(this.normalBall.normalBall, this.map1.leftBoder, () => {
+            this.normalBall.currentMoveDirectionX = this.normalBall.BALL_MOVE_X.RIGHT;
+        });
+        this.physics.add.overlap(this.normalBall.normalBall, this.map1.rightBorder, () => {
+            this.normalBall.currentMoveDirectionX = this.normalBall.BALL_MOVE_X.LEFT;
+        })
+
+        this.physics.add.overlap(this.player.playerPaddle, this.normalBall.normalBall, () => {
+            this.normalBall.currentMoveDirectionY = this.normalBall.BALL_MOVE_Y.UP;
+        });
+        this.physics.add.overlap(this.normalBall.normalBall, this.map1.topBorder, () => {
+            this.normalBall.currentMoveDirectionY = this.normalBall.BALL_MOVE_Y.DOWN;
+        })
+    }
 
     update() {
         this.player.update();
+        this.normalBall.update();
     };
 };
