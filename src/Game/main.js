@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import MainScene from "./Scenes/MainScene.js";
-import Level1Scene from "./Scenes/level1Scene.js";
 
 export default new Phaser.Game({
     type: Phaser.WEBGL,
@@ -19,6 +18,5 @@ export default new Phaser.Game({
     },
     scene: [
         MainScene,
-        Level1Scene,
     ],
 });

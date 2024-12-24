@@ -1,12 +1,17 @@
 import Phaser from "phaser"
+import SceneLoader from "../sceneLoader/SceneLoader.js";
 
 export default class MainScene extends Phaser.Scene {
     constructor() {
         super({key: "main-scene"});
     };
 
+    init() {
+        this.sceneLoader = new SceneLoader(this);
+    }
+
     initOnStartup() {
-        this.scene.launch("Level1Scene");
+        this.sceneLoader.loadLevel1();
     };
 
     changeScene(sceneToStop, newScene) {
@@ -15,6 +20,7 @@ export default class MainScene extends Phaser.Scene {
     };
 
     create() {
+        this.init();
         this.initOnStartup();
     };
 };
