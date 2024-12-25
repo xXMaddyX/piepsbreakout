@@ -39,6 +39,7 @@ export default class NormalStone {
 
     addOverlap(firstObj, secondObj) {
         let collider = this.scene.physics.add.overlap(firstObj, secondObj, () => {
+            //@COLLITION SIMPEL INVERT THE BALL VELOCITYS IN BALL
             this.takeDamage();
             this.checkDead();
         });
