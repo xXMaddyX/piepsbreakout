@@ -43,16 +43,20 @@ export default class Level1Scene extends Phaser.Scene {
     addNormalBallCollider() {
         this.physics.add.overlap(this.normalBall.normalBall, this.map1.leftBoder, () => {
             this.normalBall.currentMoveDirectionX = this.normalBall.BALL_MOVE_X.RIGHT;
+            this.normalBall.playSound("ball-hit-wall");
         });
         this.physics.add.overlap(this.normalBall.normalBall, this.map1.rightBorder, () => {
             this.normalBall.currentMoveDirectionX = this.normalBall.BALL_MOVE_X.LEFT;
+            this.normalBall.playSound("ball-hit-wall");
         })
 
         this.physics.add.overlap(this.player.playerPaddle, this.normalBall.normalBall, () => {
             this.normalBall.currentMoveDirectionY = this.normalBall.BALL_MOVE_Y.UP;
+            this.normalBall.playSound("ball-hit-stone");
         });
         this.physics.add.overlap(this.normalBall.normalBall, this.map1.topBorder, () => {
             this.normalBall.currentMoveDirectionY = this.normalBall.BALL_MOVE_Y.DOWN;
+            this.normalBall.playSound("ball-hit-wall");
         })
     }
 

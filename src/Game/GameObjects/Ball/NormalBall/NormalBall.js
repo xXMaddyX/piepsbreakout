@@ -1,8 +1,10 @@
 import Phaser from "phaser";
-import { NormalBall } from "../../../assetLoader/AssetLoader.js";
+import { NormalBall, BallHitStone, BallHitWall } from "../../../assetLoader/AssetLoader.js";
 
 const KEYS = {
     NORMAL_BALL: "normal-ball",
+    BALL_HIT_WALL_AUDIO: "ball-hit-wall",
+    BALL_HIT_STONE_AUDIO: "ball-hit-stone",
 }
 
 export default class NormalBallObj {
@@ -25,19 +27,34 @@ export default class NormalBallObj {
         this.currentMoveDirectionY = this.BALL_MOVE_Y.DOWN;
     }
 
-    static loadSprites(scene) {
+    static loadSprites(sceneIn) {
+        /**@type {Phaser.Scene} */
+        let scene = sceneIn;
         if (!scene.textures.exists(KEYS.NORMAL_BALL)) scene.load.image(KEYS.NORMAL_BALL, NormalBall);
+
+        scene.load.audio(KEYS.BALL_HIT_STONE_AUDIO, BallHitStone);
+        scene.load.audio(KEYS.BALL_HIT_WALL_AUDIO, BallHitWall);
     }
 
     create() {
         this.normalBall = this.scene.physics.add.sprite(100, 100, KEYS.NORMAL_BALL);
         this.normalBall.scale = this.normalBall.scale / 6
-        this.startBall();
+
+        this.ballHitStoneAudio = this.scene.sound.add(KEYS.BALL_HIT_STONE_AUDIO);
+        this.ballHitWallAudio = this.scene.sound.add(KEYS.BALL_HIT_WALL_AUDIO);
     }
 
-    startBall() {
-        
-    }
+    playSound(soundToPlay) {
+        switch (soundToPlay) {
+            case KEYS.BALL_HIT_WALL_AUDIO:
+                this.ballHitWallAudio.play();
+                break;
+                
+            case KEYS.BALL_HIT_STONE_AUDIO:
+                this.ballHitStoneAudio.play();
+                break;
+        };
+    };
 
     checkBallMove() {
         switch (this.currentMoveDirectionX) {

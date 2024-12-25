@@ -46,6 +46,7 @@ export default class Map1 {
     playAudio() {
         if (!this.audio.isPlaying) {
             this.audio.play();
+            this.audio.volume = 0.5
         };
     };
 
