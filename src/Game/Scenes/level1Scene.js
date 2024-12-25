@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Map1 from "../worlds/map1/map1.js";
 import Player from "../GameObjects/Player/Player.js";
+import UserInterface from "../UI/UserInterface.js";
 import NormalBallObj from "../GameObjects/Ball/NormalBall/NormalBall.js";
 
 export default class Level1Scene extends Phaser.Scene {
@@ -26,7 +27,12 @@ export default class Level1Scene extends Phaser.Scene {
         //ADD START BALL------------------------->
         this.normalBall = new NormalBallObj(this);
         this.normalBall.create();
+        this.player.addBallRef(this.normalBall);
         this.addNormalBallCollider();
+
+        this.UI = new UserInterface(this);
+        this.UI.create();
+        this.UI.setPlayerPaddelRef(this.player);
     };
 
     addPlayerWorldCollider() {
@@ -51,6 +57,7 @@ export default class Level1Scene extends Phaser.Scene {
     }
 
     update() {
+        this.map1.update();
         this.player.update();
         this.normalBall.update();
     };

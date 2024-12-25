@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { BackgroundLvL1 } from "../../assetLoader/AssetLoader.js";
+import { BackgroundLvL1, LvL1Music } from "../../assetLoader/AssetLoader.js";
 import { World1Config, KEYS } from "./map1Config.js";
 
 export default class Map1 {
@@ -10,8 +10,11 @@ export default class Map1 {
         this.xCenter = 960;
     };
 
-    static loadSprites(scene) {
+    static loadSprites(sceneIn) {
+        /**@type {Phaser.Scene} */
+        let scene = sceneIn;
         scene.load.image(KEYS.KEY_BACKGROUND, BackgroundLvL1);
+        scene.load.audio("music-lvl1", LvL1Music);
     };
 
     create() {
@@ -37,9 +40,16 @@ export default class Map1 {
         this.topBorder.setDisplaySize(1920, 20);
         this.scene.physics.add.existing(this.topBorder, true);
 
+        this.audio = this.scene.sound.add("music-lvl1")
     }
 
-    update() {
+    playAudio() {
+        if (!this.audio.isPlaying) {
+            this.audio.play();
+        };
+    };
 
+    update() {
+        this.playAudio();
     };
 };

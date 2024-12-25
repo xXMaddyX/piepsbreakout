@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import NormalBallObj from "../Ball/NormalBall/NormalBall";
 import { PlayerSkin1 } from "../../assetLoader/AssetLoader";
 
 const KEYS = {
@@ -12,6 +13,7 @@ export default class Player  {
         this.maxLeft = 0;
         this.maxRight = 0;
         this.SPEED = 1300;
+        this.aiPlayerIsActive = null;
 
         this.MOVE_STATES = {
             HOLD: 0,
@@ -19,16 +21,16 @@ export default class Player  {
             RIGHT: 1,
         };
         this.currentMoveState = 0;
+
     };
 
     static loadSprites(scene) {
         if (!scene.textures.exists(KEYS.PLAYER)) scene.load.image(KEYS.PLAYER, PlayerSkin1);
     };
 
-    setPlayerBorderMax(maxLeft, maxRight) {
-        this.maxLeft = maxLeft;
-        this.maxRight = maxRight;
-    }
+    setAiPlayerActive(bool) {
+        this.aiPlayerIsActive = bool;
+    };
 
     animations() {
 
@@ -43,6 +45,11 @@ export default class Player  {
         this.SpaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     };
 
+    addBallRef(data) {
+        /**@type {NormalBallObj} */
+        this.ballRef = data;
+    }
+
     checkCurrentMoveKey() {
         if (this.leftKey.isDown) {
             this.currentMoveState = this.MOVE_STATES.LEFT
@@ -56,7 +63,8 @@ export default class Player  {
     movementMachine() {
         switch (this.currentMoveState) {
             case this.MOVE_STATES.HOLD:
-                this.playerPaddle.setVelocityX(this.MOVE_STATES.HOLD);
+                this.playerPaddle.setVelocityX(0);
+                this.playerPaddle.setAccelerationX(0);
                 break;
 
             case this.MOVE_STATES.LEFT:
@@ -68,8 +76,48 @@ export default class Player  {
         };
     };
 
+    movementMachineAI() {
+        switch (this.currentMoveState) {
+            case this.MOVE_STATES.HOLD:
+                this.playerPaddle.setVelocityX(this.ballRef.normalBall.body.velocity.x);
+                this.playerPaddle.setAccelerationX(0)
+                break;
+
+            case this.MOVE_STATES.LEFT:
+                if (this.playerPaddle.body.velocity.x < this.SPEED) {
+                    this.playerPaddle.setAccelerationX(this.MOVE_STATES.LEFT * this.SPEED);
+                }
+                break;
+
+            case this.MOVE_STATES.RIGHT:
+                if (this.playerPaddle.body.velocity.x < this.SPEED) {
+                    this.playerPaddle.setAccelerationX(this.MOVE_STATES.RIGHT * this.SPEED);
+                }
+                break;
+        };
+    }
+
+    aiPlayer() {
+        if (this.ballRef) {
+            if (this.ballRef.normalBall.x > this.playerPaddle.x + 50) {
+                this.currentMoveState = this.MOVE_STATES.RIGHT;
+            } else if (this.ballRef.normalBall.x < this.playerPaddle.x - 50) {
+                this.currentMoveState = this.MOVE_STATES.LEFT;
+            } else {
+                this.currentMoveState = this.MOVE_STATES.HOLD;
+            }
+        }
+    }
+
     update(delta, time) {
-        this.checkCurrentMoveKey();
-        this.movementMachine();
+        if (this.aiPlayerIsActive) {
+            this.aiPlayer();
+            this.movementMachineAI();
+        } else {
+            this.checkCurrentMoveKey();
+            this.movementMachine();
+        }
+
+        
     };
 };

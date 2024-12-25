@@ -9,7 +9,7 @@ export default class NormalBallObj {
     constructor(scene) {
         /**@type {Phaser.Scene} */
         this.scene = scene;
-        this.DEFAULT_SPEED = 250;
+        this.DEFAULT_SPEED = 500;
         this.SPEED = this.DEFAULT_SPEED;
 
         this.BALL_MOVE_X = {
