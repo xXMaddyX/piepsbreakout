@@ -22,6 +22,10 @@ export default class Player  {
         };
         this.currentMoveState = 0;
 
+        this.PLAYER_SKILLS = {
+            aiPlayer: false,
+        }
+
     };
 
     static loadSprites(scene) {

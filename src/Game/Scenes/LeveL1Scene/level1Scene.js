@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import Map1 from "../worlds/map1/map1.js";
-import Player from "../GameObjects/Player/Player.js";
-import UserInterface from "../UI/UserInterface.js";
-import NormalBallObj from "../GameObjects/Ball/NormalBall/NormalBall.js";
+import Map1 from "../../worlds/map1/map1.js";
+import Player from "../../GameObjects/Player/Player.js";
+import UserInterface from "../../UI/UserInterface.js";
+import NormalBallObj from "../../GameObjects/Ball/NormalBall/NormalBall.js";
 
 export default class Level1Scene extends Phaser.Scene {
     constructor() {

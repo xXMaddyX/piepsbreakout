@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import Level1Scene from "../Scenes/level1Scene.js";
+import Level1Scene from "../Scenes/LeveL1Scene/level1Scene.js";
 
 export default class SceneLoader{
     constructor(scene) {
