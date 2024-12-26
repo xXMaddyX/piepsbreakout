@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import Player from "../../Player/Player.js";
+import NormalBallObj from "../../Ball/NormalBall/NormalBall.js";
 import NormalStone from "../Stones/NormalStone.js";
 
 
@@ -14,25 +14,27 @@ export default class StoneGenerator {
         };
     };
 
-    setPlayerRef(playerRefIn) {
-        /**@type {Player} */
-        this.player = playerRefIn;
-    };
+    setBallRef(ballRef) {
+        /**@type {NormalBallObj} */
+        this.ball = ballRef;
+    }
 
     generateStoneMap(stoneMap, stoneType) {
         /**@type {Array} */
         let map = stoneMap;
         let stoneArr = [];
         switch (stoneType) {
-            case this.StoneTypes.NORMAL:
-                map.forEach(({/* VORERST NUR PLATZHALTER*/}) => {
+            case "normal-stone":
+                map.forEach(({x, y, scale, depth}) => {
                     /**@type {NormalStone} */
-                    let newStone = new this.StoneTypes.NORMAL(this.scene);
-                    newStone.collider = this.scene.physics.overlap();
-                    newStone.create();
-
+                    let newStone = new NormalStone(this.scene);
+                    newStone.create(x, y, scale, depth);
+                    newStone.addOverlapBall(this.ball);
+    
+                    stoneArr.push(newStone);
                 });
                 break;
         }
+        return stoneArr;
     }
 }

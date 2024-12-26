@@ -3,16 +3,22 @@ import Map1 from "../../worlds/map1/map1.js";
 import Player from "../../GameObjects/Player/Player.js";
 import UserInterface from "../../UI/UserInterface.js";
 import NormalBallObj from "../../GameObjects/Ball/NormalBall/NormalBall.js";
+import StoneGenerator from "../../GameObjects/Stones/StoneGenerator/StoneGenerator.js";
+import NormalStone from "../../GameObjects/Stones/Stones/NormalStone.js";
+import { stoneConfig } from "./level1.Config.js";
 
 export default class Level1Scene extends Phaser.Scene {
     constructor() {
         super({key: "Level1Scene"});
+
+        this.NormalStonePool = [];
     };
 
     preload() {
         Map1.loadSprites(this);
         Player.loadSprites(this);
         NormalBallObj.loadSprites(this);
+        NormalStone.loadSprites(this);
     };
 
     create() {
@@ -33,6 +39,10 @@ export default class Level1Scene extends Phaser.Scene {
         this.UI = new UserInterface(this);
         this.UI.create();
         this.UI.setPlayerPaddelRef(this.player);
+
+        this.stoneGenerator = new StoneGenerator(this);
+        this.stoneGenerator.setBallRef(this.normalBall);
+        this.NormalStonePool = this.stoneGenerator.generateStoneMap(stoneConfig.normal_stones, "normal-stone");
     };
 
     addPlayerWorldCollider() {
@@ -64,5 +74,9 @@ export default class Level1Scene extends Phaser.Scene {
         this.map1.update();
         this.player.update();
         this.normalBall.update();
+
+        this.NormalStonePool.forEach(stone => {
+            stone.update();
+        })
     };
 };

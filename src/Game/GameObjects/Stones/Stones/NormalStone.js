@@ -1,9 +1,7 @@
 import Phaser from "phaser";
-import { NormalStoneSprite } from "../../../assetLoader/AssetLoader";
+import NormalBallObj from "../../Ball/NormalBall/NormalBall.js";
+import { NormalStoneSprite } from "../../../assetLoader/AssetLoader.js";
 
-const KEYS = {
-    NORMAL_STONE_SPRITE: "normal-stone"
-}
 
 export default class NormalStone {
     constructor(scene) {
@@ -13,12 +11,13 @@ export default class NormalStone {
         this.isDestroyed = false;
 
         this.colliderPool = [];
+
     };
 
     static loadSprites(sceneIn) {
         /**@type {Phaser.Scene} */
         let scene = sceneIn;
-        scene.load.image(KEYS.NORMAL_STONE_SPRITE, NormalStoneSprite);
+        this.spriteRef = scene.load.image("normal-stone", NormalStoneSprite);
     };
 
     takeDamage() {
@@ -37,17 +36,22 @@ export default class NormalStone {
         }
     }
 
-    addOverlap(firstObj, secondObj) {
-        let collider = this.scene.physics.add.overlap(firstObj, secondObj, () => {
-            //@COLLITION SIMPEL INVERT THE BALL VELOCITYS IN BALL
+    addOverlapBall(firstObjRef) {
+        /**@type {NormalBallObj} */
+        this.ballRef = firstObjRef;
+        let collider = this.scene.physics.add.overlap(this.ballRef.normalBall, this.normalStone, () => {
+            this.ballRef.invertBallVelocityDirection();
             this.takeDamage();
             this.checkDead();
         });
         this.colliderPool.push(collider);
     }
 
-    create(x, y) {
-        this.normalStone = this.scene.physics.add.sprite(x, y, KEYS.NORMAL_STONE_SPRITE);
+    create(x, y, scale, depth) {
+        console.log(this.scene.textures.exists("normal-stone"))
+        this.normalStone = this.scene.physics.add.sprite(x, y, "normal-stone");
+        this.normalStone.setScale(scale);
+        this.normalStone.setDepth(depth);
     };
 
     update() {
