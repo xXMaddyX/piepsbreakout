@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import NormalBallObj from "../../Ball/NormalBall/NormalBall.js";
-import { NormalStoneSprite } from "../../../assetLoader/AssetLoader.js";
+import { NormalStoneSprite, NormalStoneHitAudio } from "../../../assetLoader/AssetLoader.js";
 
 
 export default class NormalStone {
@@ -19,6 +19,7 @@ export default class NormalStone {
         /**@type {Phaser.Scene} */
         let scene = sceneIn;
         this.spriteRef = scene.load.image("normal-stone", NormalStoneSprite);
+        scene.load.audio("normal-stone-audio", NormalStoneHitAudio);
     };
 
     takeDamage() {
@@ -43,6 +44,7 @@ export default class NormalStone {
         let collider = this.scene.physics.add.overlap(this.ballRef.normalBall, this.normalStone, () => {
             if (!this.iscollidet) {
                 this.iscollidet = true;
+                this.hitAudio.play();
                 this.ballRef.invertBallVelocityDirection();
                 this.ballRef.changeSpeedRandom();
                 this.takeDamage();
@@ -60,6 +62,8 @@ export default class NormalStone {
         this.normalStone = this.scene.physics.add.sprite(x, y, "normal-stone");
         this.normalStone.setScale(scale);
         this.normalStone.setDepth(depth);
+
+        this.hitAudio = this.scene.sound.add("normal-stone-audio");
     };
 
     update() {

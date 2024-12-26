@@ -57,7 +57,7 @@ export default class NormalBallObj {
 
     /**Create the Ball Game Object */
     create() {
-        this.normalBall = this.scene.physics.add.sprite(300, 500, KEYS.NORMAL_BALL);
+        this.normalBall = this.scene.physics.add.sprite(400, 500, KEYS.NORMAL_BALL);
         this.normalBall.scale = this.normalBall.scale / 6
 
         this.ballHitStoneAudio = this.scene.sound.add(KEYS.BALL_HIT_STONE_AUDIO);
