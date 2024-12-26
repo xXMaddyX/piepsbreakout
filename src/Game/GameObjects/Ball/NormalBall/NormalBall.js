@@ -31,6 +31,20 @@ export default class NormalBallObj {
         this.currentMoveDirectionY = this.BALL_MOVE_Y.DOWN;
     }
 
+    changeSpeedRandom() {
+        let newVerticalSpeedRight = Phaser.Math.RND.pick([1.5, 2, 1.1, 1.0]);
+        this.BALL_MOVE_X.RIGHT = newVerticalSpeedRight;
+
+        let newVerticalSpeedLeft = Phaser.Math.RND.pick([-1.5, -2, -1.1, -1.0]);
+        this.BALL_MOVE_X.LEFT = newVerticalSpeedLeft;
+
+        let newHorizontalSpeedDown = Phaser.Math.RND.pick([1.5, 2, 1.1, 1.0]);
+        this.BALL_MOVE_Y.DOWN = newHorizontalSpeedDown;
+
+        let newHorizontalSpeedUP = Phaser.Math.RND.pick([-1.5, -2, -1.1, -1.0]);
+        this.BALL_MOVE_Y.UP = newHorizontalSpeedUP;
+    };
+
     /**Loads the Sprite Objects */
     static loadSprites(sceneIn) {
         /**@type {Phaser.Scene} */
@@ -43,7 +57,7 @@ export default class NormalBallObj {
 
     /**Create the Ball Game Object */
     create() {
-        this.normalBall = this.scene.physics.add.sprite(300, 300, KEYS.NORMAL_BALL);
+        this.normalBall = this.scene.physics.add.sprite(300, 500, KEYS.NORMAL_BALL);
         this.normalBall.scale = this.normalBall.scale / 6
 
         this.ballHitStoneAudio = this.scene.sound.add(KEYS.BALL_HIT_STONE_AUDIO);
@@ -117,26 +131,19 @@ export default class NormalBallObj {
      * Also Changes LEFT and RIGHT Randomly, (It should use at collition!!!)
      */
     invertBallVelocityDirection() {
-        if (this.currentMoveDirectionX == this.BALL_MOVE_X.LEFT && this.currentMoveDirectionY == this.BALL_MOVE_Y.UP || this.currentMoveDirectionX == this.BALL_MOVE_X.RIGHT && this.currentMoveDirectionY.UP) {
-            let RandomDirection = Phaser.Math.RND.pick([0, 1]);
-            if (RandomDirection == 0) {
-                this.currentMoveDirectionX = this.BALL_MOVE_X.LEFT;
-            } else if (RandomDirection == 1) {
-                this.currentMoveDirectionX = this.BALL_MOVE_X-RIGHT;
-            };
-            this.currentMoveDirectionY = this.BALL_MOVE_Y.DEFAULT_DOWN;
-        }
-        if (this.currentMoveDirectionX == this.BALL_MOVE_X.LEFT && this.currentMoveDirectionY == this.BALL_MOVE_Y.DEFAULT_DOWN || this.currentMoveDirectionX == this.BALL_MOVE_X.RIGHT && this.currentMoveDirectionY == this.BALL_MOVE_Y.DOWN) {
-            let RandomDirection = Phaser.Math.RND.pick([0, 1]);
-            if (RandomDirection == 0) {
-                this.currentMoveDirectionX = this.BALL_MOVE_X.LEFT;
-            } else if (RandomDirection == 1) {
-                this.currentMoveDirectionX = this.BALL_MOVE_X.RIGHT;
-            };
+        if (this.currentMoveDirectionY === this.BALL_MOVE_Y.DOWN) {
+            this.normalBall.setVelocityY(this.BALL_MOVE_Y.UP * this.SPEED);
             this.currentMoveDirectionY = this.BALL_MOVE_Y.UP;
-        };
-    };
-
+        } else if (this.currentMoveDirectionY === this.BALL_MOVE_Y.UP) {
+            this.normalBall.setVelocityY(this.BALL_MOVE_Y.DOWN * this.SPEED);
+            this.currentMoveDirectionY = this.BALL_MOVE_Y.DOWN;
+        }
+    
+        const newDirection = Phaser.Math.RND.pick([this.BALL_MOVE_X.LEFT, this.BALL_MOVE_X.RIGHT]);
+        this.normalBall.setVelocityX(newDirection * this.SPEED);
+        this.currentMoveDirectionX = newDirection;
+    }
+    
     update() {
         this.checkBallMove();
     }

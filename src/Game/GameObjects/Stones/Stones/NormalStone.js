@@ -9,6 +9,7 @@ export default class NormalStone {
         this.scene = scene;
         this.HP = 1;
         this.isDestroyed = false;
+        this.iscollidet = false;
 
         this.colliderPool = [];
 
@@ -40,9 +41,16 @@ export default class NormalStone {
         /**@type {NormalBallObj} */
         this.ballRef = firstObjRef;
         let collider = this.scene.physics.add.overlap(this.ballRef.normalBall, this.normalStone, () => {
-            this.ballRef.invertBallVelocityDirection();
-            this.takeDamage();
-            this.checkDead();
+            if (!this.iscollidet) {
+                this.iscollidet = true;
+                this.ballRef.invertBallVelocityDirection();
+                this.ballRef.changeSpeedRandom();
+                this.takeDamage();
+                this.checkDead();
+                this.scene.time.delayedCall(100, () => {
+                    this.iscollidet = false;
+                });
+            };
         });
         this.colliderPool.push(collider);
     }
