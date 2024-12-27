@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import NormalBallObj from "../../Ball/NormalBall/NormalBall.js";
 import NormalStone from "../Stones/NormalStone.js";
+import RedStone from "../Stones/RedStones.js";
 
 
 export default class StoneGenerator {
@@ -28,6 +29,17 @@ export default class StoneGenerator {
                 map.forEach(({x, y, scale, depth}) => {
                     /**@type {NormalStone} */
                     let newStone = new NormalStone(this.scene);
+                    newStone.create(x, y, scale, depth);
+                    newStone.addOverlapBall(this.ball);
+    
+                    stoneArr.push(newStone);
+                });
+                break;
+
+            case "red-stone":
+                map.forEach(({x, y, scale, depth}) => {
+                    /**@type {RedStone} */
+                    let newStone = new RedStone(this.scene);
                     newStone.create(x, y, scale, depth);
                     newStone.addOverlapBall(this.ball);
     

@@ -3,6 +3,7 @@ import Map1 from "../../worlds/map1/map1.js";
 import Player from "../../GameObjects/Player/Player.js";
 import UserInterface from "../../UI/UserInterface.js";
 import NormalBallObj from "../../GameObjects/Ball/NormalBall/NormalBall.js";
+import RedStone from "../../GameObjects/Stones/Stones/RedStones.js";
 import StoneGenerator from "../../GameObjects/Stones/StoneGenerator/StoneGenerator.js";
 import NormalStone from "../../GameObjects/Stones/Stones/NormalStone.js";
 import { stoneConfig } from "./level1.Config.js";
@@ -12,6 +13,7 @@ export default class Level1Scene extends Phaser.Scene {
         super({key: "Level1Scene"});
 
         this.NormalStonePool = [];
+        this.RedStonePool = [];
     };
 
     preload() {
@@ -19,6 +21,7 @@ export default class Level1Scene extends Phaser.Scene {
         Player.loadSprites(this);
         NormalBallObj.loadSprites(this);
         NormalStone.loadSprites(this);
+        RedStone.loadSprites(this);
     };
 
     create() {
@@ -43,6 +46,8 @@ export default class Level1Scene extends Phaser.Scene {
         this.stoneGenerator = new StoneGenerator(this);
         this.stoneGenerator.setBallRef(this.normalBall);
         this.NormalStonePool = this.stoneGenerator.generateStoneMap(stoneConfig.normal_stones, "normal-stone");
+
+        this.RedStonePool = this.stoneGenerator.generateStoneMap(stoneConfig.red_stones, "red-stone");
     };
 
     addPlayerWorldCollider() {
@@ -62,7 +67,11 @@ export default class Level1Scene extends Phaser.Scene {
 
         this.physics.add.overlap(this.player.playerPaddle, this.normalBall.normalBall, () => {
             this.normalBall.currentMoveDirectionY = this.normalBall.BALL_MOVE_Y.UP;
+            this.player.glowTrigger();
             this.normalBall.playSound("ball-hit-stone");
+            this.time.delayedCall(100, () => {
+                this.player.glowTrigger()
+            })
         });
         this.physics.add.overlap(this.normalBall.normalBall, this.map1.topBorder, () => {
             this.normalBall.currentMoveDirectionY = this.normalBall.BALL_MOVE_Y.DOWN;
@@ -70,10 +79,10 @@ export default class Level1Scene extends Phaser.Scene {
         })
     }
 
-    update() {
+    update(time, delta) {
         this.map1.update();
         this.player.update();
-        this.normalBall.update();
+        this.normalBall.update(time, delta);
 
         this.NormalStonePool.forEach(stone => {
             stone.update();

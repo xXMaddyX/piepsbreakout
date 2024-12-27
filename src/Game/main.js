@@ -3,7 +3,7 @@ import MainScene from "./Scenes/MainScene.js";
 
 export default new Phaser.Game({
     type: Phaser.WEBGL,
-    pixelArt: true,
+    pixelArt: false,
     scale: {
         mode: Phaser.DOM.RESIZE,
         width: 1920,

@@ -8,6 +8,9 @@ import BallHitStone from "../Assets/Audio/BallAudios/BallHitStone.wav";
 
 //Stone Imports
 import NormalStoneSprite from "../Assets/Stones/StoneGreen.png";
+import RedStoneSprite from "../Assets/Stones/RedStone.png";
+
+//Stone Audio Imports
 import NormalStoneHitAudio from "../Assets/Audio/BallAudios/hitNormalStone.wav";
 
 //Level1 Imports
@@ -24,6 +27,7 @@ export {
 
     //Stones Exports
     NormalStoneSprite,
+    RedStoneSprite,
     NormalStoneHitAudio,
 
     //Level1 Exports

@@ -14,6 +14,7 @@ export default class Player  {
         this.maxRight = 0;
         this.SPEED = 1300;
         this.aiPlayerIsActive = null;
+        this.glowIsActive = false;
 
         this.MOVE_STATES = {
             HOLD: 0,
@@ -42,6 +43,9 @@ export default class Player  {
 
     create(x, y) {
         this.playerPaddle = this.scene.physics.add.sprite(x, y, KEYS.PLAYER);
+        this.playerPaddle.postFX.addShadow(-1, 1, 0.015)
+        this.glow = this.playerPaddle.preFX.addGlow("0xFF4433" , 10, undefined, undefined, undefined, 20)
+        this.glow.active = false;
         this.playerPaddle.scale = this.playerPaddle.scale / 3
 
         this.leftKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -113,7 +117,21 @@ export default class Player  {
         }
     }
 
+    glowHandler() {
+        if (this.glowIsActive) {
+            this.glow.active = true;
+        }
+        if (!this.glowIsActive) {
+            this.glow.active = false;
+        }
+    }
+
+    glowTrigger() {
+        this.glowIsActive = !this.glowIsActive;
+    }
+
     update(delta, time) {
+        this.glowHandler();
         if (this.aiPlayerIsActive) {
             this.aiPlayer();
             this.movementMachineAI();
@@ -121,7 +139,6 @@ export default class Player  {
             this.checkCurrentMoveKey();
             this.movementMachine();
         }
-
         
     };
 };

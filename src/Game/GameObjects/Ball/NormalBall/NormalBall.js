@@ -60,6 +60,9 @@ export default class NormalBallObj {
         this.normalBall = this.scene.physics.add.sprite(400, 500, KEYS.NORMAL_BALL);
         this.normalBall.scale = this.normalBall.scale / 6
 
+        this.glow = this.normalBall.postFX.addGlow("0x39FF14" , 0, undefined, undefined, undefined, 20)
+        this.normalBall.postFX.addShadow(-1, 1, 0.02)
+
         this.ballHitStoneAudio = this.scene.sound.add(KEYS.BALL_HIT_STONE_AUDIO);
         this.ballHitWallAudio = this.scene.sound.add(KEYS.BALL_HIT_WALL_AUDIO);
     }
@@ -143,8 +146,32 @@ export default class NormalBallObj {
         this.normalBall.setVelocityX(newDirection * this.SPEED);
         this.currentMoveDirectionX = newDirection;
     }
+
+    glowChanger(delta) {
+        if (this.glow.outerStrength === undefined) {
+            this.glow.outerStrength = 0;
+            this.glowIncreasing = true;
+        }
+        let glowChange = delta / 250;
+        if (this.glowIncreasing) {
+            this.glow.outerStrength += glowChange;
+            if (this.glow.outerStrength >= 5) {
+                this.glow.outerStrength = 5;
+                this.glowIncreasing = false;
+            }
+        } else {
+            this.glow.outerStrength -= glowChange;
+            if (this.glow.outerStrength <= 0) {
+                this.glow.outerStrength = 0;
+                this.glowIncreasing = true;
+            }
+        }
+    }
     
-    update() {
+    
+    
+    update(time, delta) {
         this.checkBallMove();
+        this.glowChanger(delta);
     }
 }

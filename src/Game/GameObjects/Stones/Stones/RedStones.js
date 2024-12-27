@@ -1,9 +1,8 @@
 import Phaser from "phaser";
-import NormalBallObj from "../../Ball/NormalBall/NormalBall.js";
-import { NormalStoneSprite, NormalStoneHitAudio } from "../../../assetLoader/AssetLoader.js";
+import NormalBallObj from "../../Ball/NormalBall/NormalBall";
+import { RedStoneSprite, NormalStoneHitAudio } from "../../../assetLoader/AssetLoader";
 
-
-export default class NormalStone {
+export default class RedStone {
     constructor(scene) {
         /**@type {Phaser.Scene} */
         this.scene = scene;
@@ -14,12 +13,11 @@ export default class NormalStone {
         this.colliderPool = [];
 
     };
-
     static loadSprites(sceneIn) {
-        /**@type {Phaser.Scene} */
-        let scene = sceneIn;
-        this.spriteRef = scene.load.image("normal-stone", NormalStoneSprite);
-        scene.load.audio("normal-stone-audio", NormalStoneHitAudio);
+            /**@type {Phaser.Scene} */
+            let scene = sceneIn;
+            this.spriteRef = scene.load.image("red-stone", RedStoneSprite);
+            scene.load.audio("red-stone-audio", NormalStoneHitAudio);
     };
 
     takeDamage() {
@@ -31,17 +29,17 @@ export default class NormalStone {
             this.colliderPool.forEach(element => {
                 element.destroy();
             });
-            this.normalStone.destroy();
+            this.redStone.destroy();
             this.isDestroyed = true;
         } else {
             return;
         }
-    }
+    };
 
     addOverlapBall(firstObjRef) {
         /**@type {NormalBallObj} */
         this.ballRef = firstObjRef;
-        let collider = this.scene.physics.add.overlap(this.ballRef.normalBall, this.normalStone, () => {
+        let collider = this.scene.physics.add.overlap(this.ballRef.normalBall, this.redStone, () => {
             if (!this.iscollidet) {
                 this.iscollidet = true;
                 this.hitAudio.play();
@@ -55,16 +53,16 @@ export default class NormalStone {
             };
         });
         this.colliderPool.push(collider);
-    }
+    };
 
     create(x, y, scale, depth) {
-        console.log(this.scene.textures.exists("normal-stone"))
-        this.normalStone = this.scene.physics.add.sprite(x, y, "normal-stone");
-        this.normalStone.setScale(scale);
-        this.normalStone.setDepth(depth);
-        this.normalStone.postFX.addShadow(-1, 1, 0.015)
+        console.log(this.scene.textures.exists("red-stone"))
+        this.redStone = this.scene.physics.add.sprite(x, y, "red-stone");
+        this.redStone.setScale(scale);
+        this.redStone.setDepth(depth);
+        this.redStone.postFX.addShadow(-1, 1, 0.015)
 
-        this.hitAudio = this.scene.sound.add("normal-stone-audio");
+        this.hitAudio = this.scene.sound.add("red-stone-audio");
     };
 
     update() {
